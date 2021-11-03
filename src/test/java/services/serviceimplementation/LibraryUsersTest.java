@@ -23,6 +23,7 @@ class LibraryUsersTest {
         LibraryBook javaNote = new LibraryBook("Elvis", "Java for JJC", 8);
         user.borrowABook(javaNote);
 
+        // Method check call
         final int expectedResult = 1;
         final int actualResult = decagonLib.getAppliedList().size();
 
@@ -36,6 +37,7 @@ class LibraryUsersTest {
         user.borrowABook(ios);
         user.returnBook(ios);
 
+        // Method check call
         final int expectedResult = 0;
         final int actualResult = user.getBorrowedBooks().size();
 
@@ -48,6 +50,7 @@ class LibraryUsersTest {
         // Given
         LibraryUsers user2 = new LibraryUsers("Maeli", "Elvira", Role.SENIOR_STUDENT);
 
+        // Method check call
         final int expectedResult = 1;
         final int actualResult = user.compareTo(user2);
 
