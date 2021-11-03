@@ -15,14 +15,12 @@ import static models.Library.*;
 public class LibraryUsers extends Person implements LibraryUsersServices {
     private Role role;
     private static List<Person> registeredPersons = new ArrayList<>();
-    private String init;
     public Set<LibraryBook> borrowedBooks = new HashSet<>();
 
     public LibraryUsers(String firstName, String lastName, Role role) {
         super(firstName, lastName);
         this.role = role;
         this.borrowedBooks = borrowedBooks;
-        this.init = getInitials(this);
     }
 
     public Set<LibraryBook> getBorrowedBooks() {
@@ -31,18 +29,6 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
 
     public Role getRole() {
         return role;
-    }
-
-    public String getInit() {
-        return init;
-    }
-
-    private String getInitials(LibraryUsers user) {
-        String firstName = user.getFirstName().trim().toLowerCase();
-        String lastName = user.getLastName().trim();
-        String initials = firstName.charAt(0)+lastName;
-
-        return initials;
     }
 
     @Override
