@@ -26,18 +26,18 @@ public class Main {
         LibraryBook node = new LibraryBook("Chima", "Node.js for JJC", 3);
         LibraryBook javaAdvanced = new LibraryBook("Prosper", "Java for Pros", 5);
 
-        joe.addBook(decagonLib.getAvailableBooks(), javaNote);
+        joe.addBook.accept(decagonLib.getAvailableBooks(), javaNote);
         System.out.println(decagonLib.getAvailableBooks().size());
-        joe.addBook(decagonLib.getAvailableBooks(), node);
-        joe.addBook(decagonLib.getAvailableBooks(), ios);
-        joe.addBook(decagonLib.getAvailableBooks(), javaAdvanced);
+        joe.addBook.accept(decagonLib.getAvailableBooks(), node);
+        joe.addBook.accept(decagonLib.getAvailableBooks(), ios);
+        joe.addBook.accept(decagonLib.getAvailableBooks(), javaAdvanced);
         System.out.println(decagonLib.getAvailableBooks().size());
 //
         System.out.println(decagonLib.getAvailableBooks().get(javaNote.getTitle()));
 //        System.out.println(prosper.getBorrowedBooks().size());
         prosper.borrowABook(node, joe);
-        mark.borrowABook(node, joe);
-        emekus.borrowABook(node, joe);
+//        mark.borrowABook(node, joe);
+//        emekus.borrowABook(node, joe);
         ikay.borrowABook(node, joe);
 //        System.out.println("The first person is: " + joe.requestQueue().poll());
         joe.lendBook();

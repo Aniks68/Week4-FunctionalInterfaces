@@ -5,6 +5,9 @@ import services.LibrarianServices;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 public class Library implements Comparable<LibraryUsers.Role> {
     private static Map<LibraryUsers, Set<LibraryBook>> lentRecords = new HashMap<>();
@@ -49,12 +52,25 @@ public class Library implements Comparable<LibraryUsers.Role> {
             super(firstName, lastName);
         }
 
-        @Override
-        public void addBook(Map<String, Integer> bookList, LibraryBook book) {
+        public BiConsumer<Map<String,Integer>, LibraryBook> addBook = (bookList,book) -> {
+
             if (bookList.containsKey(book.getTitle())) {
                 int availCopy = bookList.get(book.getTitle());
                 bookList.replace(book.getTitle(), availCopy+=book.getCopies());
             } else bookList.put(book.getTitle(), book.getCopies());
+        };
+
+//         BiConsumer<Map<>, LibraryBook> addBookTest = (bookList, book) -> {
+//            if (bookList.containsKey(book.getTitle())) {
+//                int availCopy = (int) bookList.get(book.getTitle());
+//                bookList.replace(book.getTitle(), availCopy+=book.getCopies());
+//            } else bookList.put(book.getTitle(), book.getCopies());
+//        };
+
+
+        @Override
+        public void addBook(Map<String, Integer> bookList, LibraryBook book) {
+            addBook(bookList,book);
         }
 
         @Override
@@ -66,25 +82,36 @@ public class Library implements Comparable<LibraryUsers.Role> {
                 LibraryBook book = getAppliedList().get(user);
 
                 try {
-                    if (availableBooks.containsKey(book.getTitle()) && (availableBooks.get(book.getTitle()) != 0)
-                            && (!user.getBorrowedBooks().contains(book))) {
-//                        requestQueue();
-                        user.getBorrowedBooks().add(book);
-
-                        if(!lentRecords.containsKey(user)) {
-                            lentRecords.put(user, user.getBorrowedBooks());
-                            user.getBorrowedBooks().add(book);
-                        } else {
-                            lentRecords.get(user).add(book);
-                        }
-                        updateAvailCopies(availableBooks, book);
-                        System.out.println(book.getTitle() + " has been lent to " + user.getFirstName() + " " + user.getLastName());
-                    } else {
-                        System.out.println("Apologies " + user.getFirstName() + ", " + book.getTitle() + " is not available now.");
-                    }
+                    lendBookProcess(user, book);
                 } catch (Exception e) {
                     throw new IllegalArgumentException("Apologies, " + book.getTitle() + " is not available now.");
                 }
+            }
+        }
+
+
+        private void lendBookProcess(LibraryUsers user, LibraryBook book) {
+
+            Predicate<LibraryBook> book1 = (x) -> availableBooks.containsKey(book.getTitle().toString());
+//            System.out.println("========");
+//            System.out.println("The truth is : " + book1);
+//            System.out.println("++++++++++++++++++");
+            if (availableBooks.containsKey(book.getTitle()) && (availableBooks.get(book.getTitle()) != 0)
+                    && (!user.getBorrowedBooks().contains(book))) {
+                user.getBorrowedBooks().add(book);
+                updateLentRecords(user, book);
+                updateAvailCopies(availableBooks, book);
+                System.out.println(book.getTitle() + " has been lent to " + user.getFirstName() + " " + user.getLastName());
+            } else {
+                System.out.println("Apologies " + user.getFirstName() + ", " + book.getTitle() + " is not available now.");
+            } 
+        }
+
+        private void updateLentRecords(LibraryUsers user, LibraryBook book) {
+            if(!lentRecords.containsKey(user)) {
+                lentRecords.put(user, user.getBorrowedBooks());
+            } else {
+                lentRecords.get(user).add(book);
             }
         }
 
@@ -128,6 +155,7 @@ public class Library implements Comparable<LibraryUsers.Role> {
             return bookRequestPriorityQueue;
         }
 
+
         private static Queue<LibraryUsers> bookRequestPriorityQueue =
                 new PriorityQueue<>(new Comparator<LibraryUsers>() {
                     @Override
@@ -147,3 +175,4 @@ public class Library implements Comparable<LibraryUsers.Role> {
 
     }
 }
+

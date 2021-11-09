@@ -12,8 +12,8 @@ import java.util.Set;
 import static services.serviceimplementation.Library.*;
 
 public class LibraryUsers extends Person implements LibraryUsersServices {
-    private Role role;
-    private static List<Person> registeredPersons = new ArrayList<>();
+    private final Role role;
+    private static final List<Person> registeredPersons = new ArrayList<>();
     private Set<LibraryBook> borrowedBooks = new HashSet<>();
 
     public LibraryUsers(String firstName, String lastName, Role role) {
@@ -36,7 +36,7 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
         if (!book.getTitle().isEmpty()) {
             LocalDateTime time = LocalDateTime.now();
             getAppliedList().put(this, book);
-            librarian.requestQueue().add(this);
+            Librarian.requestQueue().add(this);
             getApplyTime().put(time, this);
         }
     }
@@ -77,7 +77,7 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
         SENIOR_STUDENT(2),
         JUNIOR_STUDENT(3);
 
-        private int priority;
+        private final int priority;
 
         Role(int priority) {
             this.priority = priority;
