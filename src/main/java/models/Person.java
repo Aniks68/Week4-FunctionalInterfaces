@@ -34,10 +34,8 @@ public abstract class Person implements Comparable<Person>{
 
     @Override
     public String toString() {
-        return "Models.Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+        return "Person{" +
+                "Name= " + firstName + " " + lastName + "}";
     }
 
     @Override

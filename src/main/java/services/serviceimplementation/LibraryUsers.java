@@ -1,6 +1,5 @@
 package services.serviceimplementation;
 
-import enums.Role;
 import models.Person;
 import services.LibraryUsersServices;
 
@@ -10,17 +9,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static models.Library.*;
+import static services.serviceimplementation.Library.*;
 
 public class LibraryUsers extends Person implements LibraryUsersServices {
     private Role role;
     private static List<Person> registeredPersons = new ArrayList<>();
-    public Set<LibraryBook> borrowedBooks = new HashSet<>();
+    private Set<LibraryBook> borrowedBooks = new HashSet<>();
 
     public LibraryUsers(String firstName, String lastName, Role role) {
         super(firstName, lastName);
         this.role = role;
         this.borrowedBooks = borrowedBooks;
+        registeredPersons.add(this);
     }
 
     public Set<LibraryBook> getBorrowedBooks() {
@@ -32,12 +32,18 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
     }
 
     @Override
-    public void borrowABook(LibraryBook book) {
+    public void borrowABook(LibraryBook book, Library.Librarian librarian) {
         if (!book.getTitle().isEmpty()) {
             LocalDateTime time = LocalDateTime.now();
-            appliedList.put(this, book);
-            applyTime.put(time, this);
+            getAppliedList().put(this, book);
+            librarian.requestQueue().add(this);
+            getApplyTime().put(time, this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "" + super.toString();
     }
 
     @Override
@@ -45,7 +51,7 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
         try {
             if (borrowedBooks.contains(book)) {
                 borrowedBooks.remove(book);
-                returningBooks.put(this, book.getTitle());
+                getReturningBooks().put(this, book.getTitle());
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Sorry, you did not borrow this book from the library");
@@ -64,5 +70,21 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
             return -1;
         }
         return 0;
+    }
+
+    public enum Role {
+        TEACHER(1),
+        SENIOR_STUDENT(2),
+        JUNIOR_STUDENT(3);
+
+        private int priority;
+
+        Role(int priority) {
+            this.priority = priority;
+        }
+
+        public int getPriority(){
+            return priority;
+        }
     }
 }

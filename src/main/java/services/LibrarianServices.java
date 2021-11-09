@@ -8,7 +8,7 @@ public interface LibrarianServices {
 
     void addBook(Map<String, Integer> bookList, LibraryBook book);
 
-    void lendBook(LibraryBook book, LibraryUsers user);
+    void lendBook();
 
     void updateAvailCopies(Map<String, Integer> bookList, LibraryBook book);
 

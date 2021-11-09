@@ -50,4 +50,11 @@ public class LibraryBook {
     public int hashCode() {
         return Objects.hash(getAuthor(), getTitle(), copies);
     }
+
+    @Override
+    public String toString() {
+        return "LibraryBook{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }
