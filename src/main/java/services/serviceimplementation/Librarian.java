@@ -98,20 +98,10 @@ public class Librarian extends Person implements LibrarianServices {
     }
 
 
-    private static Queue<LibraryUsers> bookRequestPriorityQueue =
-            new PriorityQueue<>(new Comparator<LibraryUsers>() {
-                @Override
-                public int compare(LibraryUsers o1, LibraryUsers o2) {
-                    final int user1Priority = o1.getRole().getPriority();
-                    final int user2Priority = o2.getRole().getPriority();
-                    if (user1Priority < user2Priority) {
-                        return -1;
-                    } else if (user1Priority > user2Priority) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            });
+    private static Queue<LibraryUsers> bookRequestPriorityQueue = new PriorityQueue<>((o1, o2) -> {
+        final int user1Priority = o1.getRole().getPriority();
+        final int user2Priority = o2.getRole().getPriority();
+        return Integer.compare(user1Priority, user2Priority);
+    });
 
 }

@@ -27,29 +27,14 @@ public class Main {
         joe.addABook(node);
         joe.addABook(ios);
         joe.addABook(javaAdvanced);
-        System.out.println(decagonLib.getAvailableBooks().size());
-//
-        System.out.println(decagonLib.getAvailableBooks().get(javaNote.getTitle()));
-//        System.out.println(prosper.getBorrowedBooks().size());
-        prosper.borrowABook(node, joe);
-//        prosper.borrowABook(ios, joe);
-//        prosper.borrowABook(javaAdvanced, joe);
-//        mark.borrowABook(node, joe);
-//        emekus.borrowABook(node, joe);
-        ikay.borrowABook(node, joe);
-//        System.out.println("The first person is: " + joe.requestQueue().poll());
-        joe.lendBook();
-//        joe.lendBook();
-//        joe.lendBook();
-//        joe.lendBook();
-//        System.out.println(decagonLib.getLentRecords().size());
-
-
         System.out.println("========================");
-//        joe.lendBook(javaNote, prosper);
-//        joe.lendBook(ios, emekus);
-//        joe.lendBook(node, mark);
-//        joe.lendBook(javaAdvanced, ikay);
+
+        prosper.borrowABook(node, joe);
+        mark.borrowABook(node, joe);
+        emekus.borrowABook(node, joe);
+
+        ikay.borrowABook(node, joe);
+        joe.lendBook();
 
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
