@@ -63,9 +63,9 @@ class LibrarianTest {
         user.returnBook(javaAdvanced);
         librarian.acceptReturnedBooks();
 
-        final boolean expectedResult = false;
-        final boolean actualResult = decagonLib.getLentRecords().get(user).contains(javaAdvanced);
+        final boolean expectedResult1 = false;
+        final boolean actualResult2 = decagonLib.getLentRecords().get(user).contains(javaAdvanced);
 
-        assertEquals(expectedResult, actualResult);
+        assertEquals(expectedResult1, actualResult2);
     }
 }
