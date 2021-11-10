@@ -1,5 +1,6 @@
 package services.serviceimplementation;
 
+import models.LibraryBook;
 import models.Person;
 import services.LibraryUsersServices;
 
@@ -32,12 +33,12 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
     }
 
     @Override
-    public void borrowABook(LibraryBook book, Library.Librarian librarian) {
+    public void borrowABook(LibraryBook book, Librarian librarian) {
         if (!book.getTitle().isEmpty()) {
-            LocalDateTime time = LocalDateTime.now();
+//            LocalDateTime time = LocalDateTime.now();
             getAppliedList().put(this, book);
             Librarian.requestQueue().add(this);
-            getApplyTime().put(time, this);
+//            getApplyTime().put(time, this);
         }
     }
 
@@ -51,7 +52,7 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
         try {
             if (borrowedBooks.contains(book)) {
                 borrowedBooks.remove(book);
-                getReturningBooks().put(this, book.getTitle());
+                getReturningBooks().put(this, book);
             }
         } catch (Exception e) {
             throw new IllegalArgumentException("Sorry, you did not borrow this book from the library");
@@ -60,8 +61,6 @@ public class LibraryUsers extends Person implements LibraryUsersServices {
 
     @Override
     public int compareTo(LibraryUsers otherPerson) {
-
-//        Integer.compare(otherPerson.getRole().getPriority(), users.getRole().getPriority());
 
         if(getRole().getPriority() < otherPerson.getRole().getPriority()){
             return 1;

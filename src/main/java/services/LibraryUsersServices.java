@@ -1,7 +1,7 @@
 package services;
 
 import services.serviceimplementation.Library;
-import services.serviceimplementation.LibraryBook;
+import models.LibraryBook;
 import services.serviceimplementation.LibraryUsers;
 
 public interface LibraryUsersServices {

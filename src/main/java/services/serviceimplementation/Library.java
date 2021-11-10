@@ -1,20 +1,18 @@
 package services.serviceimplementation;
 
+import models.LibraryBook;
 import models.Person;
 import services.LibrarianServices;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 
 public class Library implements Comparable<LibraryUsers.Role> {
     private static Map<LibraryUsers, Set<LibraryBook>> lentRecords = new HashMap<>();
     private static Map<String, Integer> availableBooks = new HashMap<>();
     private static HashMap<LibraryUsers, LibraryBook> appliedList = new HashMap<LibraryUsers, LibraryBook>();
     private static LinkedHashMap<LocalDateTime, LibraryUsers> applyTime = new LinkedHashMap<>();
-    private static Map<LibraryUsers, String> returningBooks = new HashMap<>();
+    private static Map<LibraryUsers, LibraryBook> returningBooks = new HashMap<>();
 
 
     public Library() {
@@ -36,7 +34,7 @@ public class Library implements Comparable<LibraryUsers.Role> {
         return applyTime;
     }
 
-    public static Map<LibraryUsers, String> getReturningBooks() {
+    public static Map<LibraryUsers, LibraryBook> getReturningBooks() {
         return returningBooks;
     }
 
@@ -52,25 +50,8 @@ public class Library implements Comparable<LibraryUsers.Role> {
             super(firstName, lastName);
         }
 
-        public BiConsumer<Map<String,Integer>, LibraryBook> addBook = (bookList,book) -> {
-
-            if (bookList.containsKey(book.getTitle())) {
-                int availCopy = bookList.get(book.getTitle());
-                bookList.replace(book.getTitle(), availCopy+=book.getCopies());
-            } else bookList.put(book.getTitle(), book.getCopies());
-        };
-
-//         BiConsumer<Map<>, LibraryBook> addBookTest = (bookList, book) -> {
-//            if (bookList.containsKey(book.getTitle())) {
-//                int availCopy = (int) bookList.get(book.getTitle());
-//                bookList.replace(book.getTitle(), availCopy+=book.getCopies());
-//            } else bookList.put(book.getTitle(), book.getCopies());
-//        };
-
-
-        @Override
-        public void addBook(Map<String, Integer> bookList, LibraryBook book) {
-            addBook(bookList,book);
+        public void addABook(LibraryBook book) {
+            addBook.accept(availableBooks, book);
         }
 
         @Override
@@ -89,22 +70,17 @@ public class Library implements Comparable<LibraryUsers.Role> {
             }
         }
 
-
         private void lendBookProcess(LibraryUsers user, LibraryBook book) {
 
-            Predicate<LibraryBook> book1 = (x) -> availableBooks.containsKey(book.getTitle().toString());
-//            System.out.println("========");
-//            System.out.println("The truth is : " + book1);
-//            System.out.println("++++++++++++++++++");
-            if (availableBooks.containsKey(book.getTitle()) && (availableBooks.get(book.getTitle()) != 0)
+           if (availableBooks.containsKey(book.getTitle()) && (availableBooks.get(book.getTitle()) != 0)
                     && (!user.getBorrowedBooks().contains(book))) {
                 user.getBorrowedBooks().add(book);
                 updateLentRecords(user, book);
-                updateAvailCopies(availableBooks, book);
+                updateAvailCopies.accept(availableBooks, book);
                 System.out.println(book.getTitle() + " has been lent to " + user.getFirstName() + " " + user.getLastName());
             } else {
                 System.out.println("Apologies " + user.getFirstName() + ", " + book.getTitle() + " is not available now.");
-            } 
+            }
         }
 
         private void updateLentRecords(LibraryUsers user, LibraryBook book) {
@@ -116,29 +92,27 @@ public class Library implements Comparable<LibraryUsers.Role> {
         }
 
         @Override
-        public void updateAvailCopies(Map<String, Integer> bookList, LibraryBook book) {
-            try {
-                if (bookList.containsKey(book.getTitle())) {
-                    int availCopy = bookList.get(book.getTitle());
-                    bookList.replace(book.getTitle(), availCopy-1);
+        public void acceptReturnedBooks() {
+            Iterator users = returningBooks.keySet().iterator();
+            Iterator books = returningBooks.values().iterator();
+
+            while (users.hasNext() && books.hasNext()) {
+                LibraryUsers user = (LibraryUsers) users.next();
+                LibraryBook book = (LibraryBook) books.next();
+
+                try {
+                    if ((lentRecords.containsKey(user)) && (lentRecords.get(user).contains(book))) {
+                        lentRecords.get(user).remove(book);
+                        user.getBorrowedBooks().remove(book);
+                        updateReturnedCopies(book);
+                        System.out.println(user.getFirstName() + " has been removed from the list.");
+                    }
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("You are either not in the record or returning the wrong book");
                 }
-            } catch (ArithmeticException e) {
-                e.printStackTrace();
             }
         }
 
-        @Override
-        public void acceptReturnedBooks(LibraryUsers user, LibraryBook book) {
-            try {
-                if ((lentRecords.containsKey(user)) && (lentRecords.get(user).contains(book))) {
-                    lentRecords.get(user).remove(book);
-                    user.getBorrowedBooks().remove(book);
-                    updateReturnedCopies(book);
-                }
-            } catch (Exception e) {
-                throw new IllegalArgumentException("You are either not in the record or returning the wrong book");
-            }
-        }
 
         private void updateReturnedCopies(LibraryBook book) {
             try {
@@ -171,7 +145,6 @@ public class Library implements Comparable<LibraryUsers.Role> {
                         }
                     }
                 });
-
 
     }
 }

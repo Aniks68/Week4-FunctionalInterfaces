@@ -1,11 +1,6 @@
 import services.serviceimplementation.Library;
-import services.serviceimplementation.LibraryBook;
+import models.LibraryBook;
 import services.serviceimplementation.LibraryUsers;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import static services.serviceimplementation.LibraryUsers.Role.*;
 
@@ -26,16 +21,18 @@ public class Main {
         LibraryBook node = new LibraryBook("Chima", "Node.js for JJC", 3);
         LibraryBook javaAdvanced = new LibraryBook("Prosper", "Java for Pros", 5);
 
-        joe.addBook.accept(decagonLib.getAvailableBooks(), javaNote);
+        joe.addABook(javaNote);
         System.out.println(decagonLib.getAvailableBooks().size());
-        joe.addBook.accept(decagonLib.getAvailableBooks(), node);
-        joe.addBook.accept(decagonLib.getAvailableBooks(), ios);
-        joe.addBook.accept(decagonLib.getAvailableBooks(), javaAdvanced);
+        joe.addABook(node);
+        joe.addABook(ios);
+        joe.addABook(javaAdvanced);
         System.out.println(decagonLib.getAvailableBooks().size());
 //
         System.out.println(decagonLib.getAvailableBooks().get(javaNote.getTitle()));
 //        System.out.println(prosper.getBorrowedBooks().size());
         prosper.borrowABook(node, joe);
+//        prosper.borrowABook(ios, joe);
+//        prosper.borrowABook(javaAdvanced, joe);
 //        mark.borrowABook(node, joe);
 //        emekus.borrowABook(node, joe);
         ikay.borrowABook(node, joe);
@@ -60,22 +57,19 @@ public class Main {
         System.out.println("This is the old set; " + prosper.getBorrowedBooks());
 
         System.out.println(decagonLib.getLentRecords());
-        joe.acceptReturnedBooks(prosper, javaNote);
+        prosper.returnBook(node);
+        joe.acceptReturnedBooks();
+        System.out.println("This is the new set; " + prosper.getBorrowedBooks());
+        System.out.println(decagonLib.getLentRecords());
+        prosper.borrowABook(javaNote, joe);
+        joe.lendBook();
         System.out.println("This is the new set; " + prosper.getBorrowedBooks());
         System.out.println(decagonLib.getLentRecords());
 //        System.out.println(decagonLib.getAvailableBooks().get(javaNote.getTitle()));
 //        System.out.println(decagonLib.getLentRecords().size());
 //        System.out.println(prosper.getBorrowedBooks().size());
 
-//        prosper.borrowABook(javaAdvanced, joe);
-//        mark.borrowABook(javaNote, joe);
-//        ikay.borrowABook(node, joe);
-//        emekus.borrowABook(ios, joe);
-//        mark.borrowABook(node, joe);
-//        System.out.println("=============");
-//        System.out.println(joe.requestQueue());
-//        joe.lendBook(javaNote, mark);
-//        joe.lendBook(node, prosper);
+
 
     }
 }
