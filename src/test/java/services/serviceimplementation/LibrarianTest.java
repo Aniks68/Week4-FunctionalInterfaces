@@ -1,104 +1,59 @@
 package services.serviceimplementation;
 
-import enums.Role;
 import models.Library;
+import models.LibraryBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static services.serviceimplementation.LibraryUsers.Role.SENIOR_STUDENT;
 
 class LibrarianTest {
-
+    LibraryUsers user;
     Librarian librarian;
+    Library decagonLib;
+    LibraryBook javaAdvanced;
+    LibraryBook node;
+
     @BeforeEach
     void setUp() {
-        librarian = new Librarian("Joe", "Smith");
+        user = new LibraryUsers("Ella", "Velasco", SENIOR_STUDENT);
+        librarian = new Librarian("Robin", "Silva");
+        decagonLib = new Library();
+        javaAdvanced = new LibraryBook("Amigoscode", "Java for Pros", 4);
+        node = new LibraryBook("Geeks4Geeks", "Node.js for Junior Developers", 3);
     }
 
     @Test
-    @DisplayName("To add books to the library list")
-    void addBook() {
+    @DisplayName("To test if both books were added to the empty bookList")
+    void addABook() {
         // Given
-        Library decagonLib = new Library();
-        LibraryBook biology = new LibraryBook("Dr Martins", "Modern Biology", 11);
-        LibraryBook chemistry = new LibraryBook("Agawa", "New School Chemistry", 6);
+        librarian.addABook(javaAdvanced);
+        librarian.addABook(node);
 
-        librarian.addBook(decagonLib.getAvailableBooks(), biology);
-        librarian.addBook(decagonLib.getAvailableBooks(), chemistry);
         final int expectedResult = 2;
-
         final int actualResult = decagonLib.getAvailableBooks().size();
 
         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    @DisplayName("To try lending a book")
+    @DisplayName("To test if the borrower and borrowed book are added to library records")
     void lendBook() {
         // Given
-        Library decagonLib = new Library();
-        LibraryUsers prosper = new LibraryUsers("Prosper", "Amalaha", Role.JUNIOR_STUDENT);
-        LibraryUsers mark = new LibraryUsers("Mark", "Marve", Role.TEACHER);
+        librarian.addABook(javaAdvanced);
+        librarian.addABook(node);
+        user.borrowABook(javaAdvanced, librarian);
+        librarian.lendBook();
 
-        LibraryBook biology = new LibraryBook("Dr Martins", "Modern Biology", 11);
-        LibraryBook chemistry = new LibraryBook("Agawa", "New School Chemistry", 6);
-
-        librarian.lendBook(biology, mark);
-        librarian.lendBook(chemistry, prosper);
-
-        final int expectedResult = 2;
-        final int actualResult = decagonLib.getLentRecords().size();
-
-        assertEquals(expectedResult, actualResult);
-
-    }
-
-    @Test
-    @DisplayName("To check available books after lending")
-    void updateAvailCopies() {
-        Library decagonLib = new Library();
-        LibraryUsers prosper = new LibraryUsers("Prosper", "Amalaha", Role.JUNIOR_STUDENT);
-        LibraryUsers mark = new LibraryUsers("Mark", "Marve", Role.TEACHER);
-
-//        LibraryBook biology = new LibraryBook("Dr Martins", "Modern Biology", 11);
-        LibraryBook chemistry = new LibraryBook("Agawa", "New School Chemistry", 6);
-
-        librarian.addBook(decagonLib.getAvailableBooks(), chemistry);
-        librarian.addBook(decagonLib.getAvailableBooks(), chemistry);
-
-        librarian.lendBook(chemistry, mark);
-        librarian.lendBook(chemistry, prosper);
-
-        final int expectedResult = 26;
-        final int actualResult = decagonLib.getAvailableBooks().get(chemistry.getTitle());
+        final boolean expectedResult = true;
+        final boolean actualResult = decagonLib.getLentRecords().containsKey(user) && decagonLib.getLentRecords().get(user).contains(javaAdvanced);
 
         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    @DisplayName("To collect returned books")
     void acceptReturnedBooks() {
-        // Given
-
-        Library decagonLib = new Library();
-        LibraryUsers prosper = new LibraryUsers("Prosper", "Amalaha", Role.JUNIOR_STUDENT);
-        LibraryUsers mark = new LibraryUsers("Mark", "Marve", Role.TEACHER);
-
-        LibraryBook biology = new LibraryBook("Dr Martins", "Modern Biology", 11);
-        LibraryBook chemistry = new LibraryBook("Agawa", "New School Chemistry", 6);
-
-        librarian.addBook(decagonLib.getAvailableBooks(), chemistry);
-        librarian.addBook(decagonLib.getAvailableBooks(), chemistry);
-
-        librarian.lendBook(chemistry, mark);
-        librarian.lendBook(chemistry, prosper);
-
-        librarian.acceptReturnedBooks(mark, chemistry);
-
-        final int expectedResult = 1;
-        final int actualResult = decagonLib.getLentRecords().size();
-
-        assertEquals(expectedResult, actualResult);
     }
 }

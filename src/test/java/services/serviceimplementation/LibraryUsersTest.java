@@ -1,58 +1,56 @@
 package services.serviceimplementation;
 
-import enums.Role;
 import models.Library;
+import models.LibraryBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 import static org.junit.jupiter.api.Assertions.*;
+import static services.serviceimplementation.LibraryUsers.Role.SENIOR_STUDENT;
 
 class LibraryUsersTest {
     LibraryUsers user;
+    Librarian librarian;
+    Library decagonLib;
+    LibraryBook javaAdvanced;
+
     @BeforeEach
     void setUp() {
-        user = new LibraryUsers("Martha", "Hassan", Role.TEACHER);
+        user = new LibraryUsers("Ella", "Velasco", SENIOR_STUDENT);
+        librarian = new Librarian("Robin", "Silva");
+        decagonLib = new Library();
+        javaAdvanced = new LibraryBook("Amigoscode", "Java for Pros", 4);
     }
 
     @Test
-    @DisplayName("To borrow a book from the library")
+    @DisplayName("To test if the applied list contains borrower")
     void borrowABook() {
         // Given
-        Library decagonLib = new Library();
-        LibraryBook javaNote = new LibraryBook("Elvis", "Java for JJC", 8);
-        user.borrowABook(javaNote);
 
-        // Method check call
-        final int expectedResult = 1;
-        final int actualResult = decagonLib.getAppliedList().size();
+        librarian.addABook(javaAdvanced);
+        user.borrowABook(javaAdvanced, librarian);
 
-        assertEquals(expectedResult, actualResult);
-    }
+         final boolean expectedResult = true;
+         final boolean actualResult = decagonLib.getAppliedList().containsKey(user);
 
-    @Test@DisplayName("To return a borrowed book to the library")
-    void returnBook() {
-        // Given
-        LibraryBook ios = new LibraryBook("Elvis", "iOS for JJC", 8);
-        user.borrowABook(ios);
-        user.returnBook(ios);
-
-        // Method check call
-        final int expectedResult = 0;
-        final int actualResult = user.getBorrowedBooks().size();
-
-        assertEquals(expectedResult, actualResult);
+         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    @DisplayName("To test the priority comparison")
-    void compareTo() {
+    @DisplayName("To check if the return list contains user and book being returned")
+    void returnBook() {
         // Given
-        LibraryUsers user2 = new LibraryUsers("Maeli", "Elvira", Role.SENIOR_STUDENT);
 
-        // Method check call
-        final int expectedResult = 1;
-        final int actualResult = user.compareTo(user2);
+        librarian.addABook(javaAdvanced);
+        user.borrowABook(javaAdvanced, librarian);
+        librarian.lendBook();
+        user.returnBook(javaAdvanced);
+
+        final boolean expectedResult = true;
+        final boolean actualResult = decagonLib.getReturningBooks().containsKey(user)
+                && decagonLib.getReturningBooks().get(user) == javaAdvanced;
 
         assertEquals(expectedResult, actualResult);
     }

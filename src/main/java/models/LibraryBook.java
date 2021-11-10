@@ -1,4 +1,4 @@
-package services.serviceimplementation;
+package models;
 
 import java.util.Map;
 import java.util.Objects;
@@ -49,5 +49,12 @@ public class LibraryBook {
     @Override
     public int hashCode() {
         return Objects.hash(getAuthor(), getTitle(), copies);
+    }
+
+    @Override
+    public String toString() {
+        return "LibraryBook{" +
+                "title='" + title + '\'' +
+                '}';
     }
 }
