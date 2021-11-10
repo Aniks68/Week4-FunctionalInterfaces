@@ -1,16 +1,32 @@
 package services;
 
-import services.serviceimplementation.LibraryBook;
+import models.LibraryBook;
 import services.serviceimplementation.LibraryUsers;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public interface LibrarianServices {
 
-    void addBook(Map<String, Integer> bookList, LibraryBook book);
+    BiConsumer<Map<String,Integer>, LibraryBook> addBook = (bookList, book) -> {
+        if (bookList.containsKey(book.getTitle())) {
+            int availCopy = bookList.get(book.getTitle());
+            bookList.replace(book.getTitle(), availCopy+=book.getCopies());
+        } else bookList.put(book.getTitle(), book.getCopies());
+        System.out.println(book.getTitle() + " has been added.");
+    };
 
-    void lendBook(LibraryBook book, LibraryUsers user);
+    BiConsumer<Map<String,Integer>, LibraryBook> updateAvailCopies = (bookList, book) -> {
+        try {
+            if (bookList.containsKey(book.getTitle())) {
+                int availCopy = bookList.get(book.getTitle());
+                bookList.replace(book.getTitle(), availCopy-1);
+            }
+        } catch (ArithmeticException e) {
+            e.printStackTrace();
+        }
+    };
 
-    void updateAvailCopies(Map<String, Integer> bookList, LibraryBook book);
+    void lendBook();
 
-    void acceptReturnedBooks(LibraryUsers users, LibraryBook book);
+    void acceptReturnedBooks();
 }
