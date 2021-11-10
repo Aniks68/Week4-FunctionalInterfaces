@@ -54,6 +54,18 @@ class LibrarianTest {
     }
 
     @Test
+    @DisplayName("To check if the returned book is removed from borrowed records")
     void acceptReturnedBooks() {
+        librarian.addABook(javaAdvanced);
+        librarian.addABook(node);
+        user.borrowABook(javaAdvanced, librarian);
+        librarian.lendBook();
+        user.returnBook(javaAdvanced);
+        librarian.acceptReturnedBooks();
+
+        final boolean expectedResult = false;
+        final boolean actualResult = decagonLib.getLentRecords().get(user).contains(javaAdvanced);
+
+        assertEquals(expectedResult, actualResult);
     }
 }
