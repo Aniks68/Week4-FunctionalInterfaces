@@ -1,10 +1,11 @@
-import services.serviceimplementation.Library;
+import models.Library;
 import models.LibraryBook;
+import services.serviceimplementation.Librarian;
 import services.serviceimplementation.LibraryUsers;
 
 import static services.serviceimplementation.LibraryUsers.Role.*;
 
-//import static services.serviceimplementation.Library.availableBooks;
+//import static models.Library.availableBooks;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,7 +15,7 @@ public class Main {
         LibraryUsers emekus = new LibraryUsers("Emeka", "Chukwudozie", SENIOR_STUDENT);
         LibraryUsers prosper = new LibraryUsers("Prosper", "Amalaha", JUNIOR_STUDENT);
         LibraryUsers mark = new LibraryUsers("Mark", "Marve", TEACHER);
-        Library.Librarian joe = new Library.Librarian("Joe", "Matthew");
+        Librarian joe = new Librarian("Joe", "Matthew");
 
         LibraryBook javaNote = new LibraryBook("Elvis", "Java for JJC", 8);
         LibraryBook ios = new LibraryBook("Usman", "iOS for JJC", 11);
